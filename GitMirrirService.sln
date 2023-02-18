@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33403.182
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GitMirrirService", "GitMirrirService\GitMirrirService.csproj", "{403B043B-91CD-4B0E-BAAA-F26CF5E4B197}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nlogger", "NLogger\Nlogger.csproj", "{83091F9C-4482-4A8D-AEEA-6934344E2E6E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{403B043B-91CD-4B0E-BAAA-F26CF5E4B197}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{403B043B-91CD-4B0E-BAAA-F26CF5E4B197}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{403B043B-91CD-4B0E-BAAA-F26CF5E4B197}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{403B043B-91CD-4B0E-BAAA-F26CF5E4B197}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83091F9C-4482-4A8D-AEEA-6934344E2E6E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83091F9C-4482-4A8D-AEEA-6934344E2E6E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83091F9C-4482-4A8D-AEEA-6934344E2E6E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83091F9C-4482-4A8D-AEEA-6934344E2E6E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F9AC62D0-CA4F-4F8C-97F8-DBA30ABA1A12}
+	EndGlobalSection
+EndGlobal
