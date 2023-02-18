@@ -1,10 +1,10 @@
-﻿namespace GitMirrirService
+﻿namespace GitMirrorService
 {
     public class MirrorService : IHostedService, IDisposable
     {
         private int executionCount = 0;
         private readonly ILogger<MirrorService> _logger;
-        private Timer? _timer = null;
+        private Timer _timer = null;
         private TimeSpan timeout;
 
         public MirrorService(ILogger<MirrorService> logger, IConfiguration configuration)
@@ -40,7 +40,7 @@
             _timer?.Dispose();
         }
 
-        private void DoWork(object? state)
+        private void DoWork(object state)
         {
             Mirror.StarToMirror();
             var count = Interlocked.Increment(ref executionCount);

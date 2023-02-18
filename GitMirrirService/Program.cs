@@ -1,4 +1,4 @@
-namespace GitMirrirService
+namespace GitMirrorService
 {
     public class Program
     {
