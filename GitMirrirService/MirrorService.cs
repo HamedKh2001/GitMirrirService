@@ -3,6 +3,8 @@
     public class MirrorService : IHostedService, IDisposable
     {
         private int executionCount = 0;
+        private string SourceUrl = string.Empty;
+        private string DestinationUrl = string.Empty;
         private readonly ILogger<MirrorService> _logger;
         private Timer _timer = null;
         private TimeSpan timeout;
@@ -10,6 +12,9 @@
         public MirrorService(ILogger<MirrorService> logger, IConfiguration configuration)
         {
             _logger = logger;
+
+            SourceUrl = configuration.GetSection("SourceUrl").Value;
+            DestinationUrl = configuration.GetSection("DestinationUrl").Value;
 
             var hours = Convert.ToInt32(configuration.GetSection("PeriodTime")["Hour"]);
             var minutes = Convert.ToInt32(configuration.GetSection("PeriodTime")["Minutes"]);
@@ -42,7 +47,9 @@
 
         private void DoWork(object state)
         {
-            Mirror.StarToMirror();
+            Mirror.StarToMirror(SourceUrl, DestinationUrl);
+            _logger.LogInformation("Mirror Done.");
+
             var count = Interlocked.Increment(ref executionCount);
 
             _logger.LogInformation(
