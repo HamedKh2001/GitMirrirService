@@ -8,11 +8,12 @@ namespace GitMirrorService
 
         public static void StarToMirror(string sourceUrl, string destinationUrl)
         {
+            WorkingDirectory = Path.Combine(WorkingDirectory, GetMyDateTime());
             CommandExecutor($"git clone --mirror {sourceUrl}", WorkingDirectory);
             WorkingDirectory = Path.Combine(WorkingDirectory, sourceUrl.Split('/').ToList().Last());
             CommandExecutor($"git remote set-url --push origin {destinationUrl}", WorkingDirectory);
-            Task.Delay(10000).Wait();
-            CommandExecutor($"git push --mirror", WorkingDirectory);  
+            Task.Delay(25000).Wait();
+            CommandExecutor($"git push --mirror", WorkingDirectory);
         }
 
 
@@ -29,6 +30,12 @@ namespace GitMirrorService
                     }
             };
             p.Start();
+        }
+
+        static string GetMyDateTime()
+        {
+            var dt = DateTime.Now;
+            return $"{dt.Year}-{dt.Month}-{dt.Day}~{dt.Hour}:{dt.Minute}:{dt.Second}";
         }
     }
 }

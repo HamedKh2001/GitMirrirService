@@ -1,15 +1,19 @@
-﻿namespace GitMirrorService
+﻿using GitMirrorService;
+using Quartz;
+
+namespace BRTechGroup.JMS.HostedService.Jobs
 {
-    public class MirrorService : IHostedService, IDisposable
+    [DisallowConcurrentExecution]
+    public class MirrorJob : IJob
     {
         private int executionCount = 0;
         private string SourceUrl = string.Empty;
         private string DestinationUrl = string.Empty;
-        private readonly ILogger<MirrorService> _logger;
+        private readonly ILogger<MirrorJob> _logger;
         private Timer _timer = null;
         private TimeSpan timeout;
 
-        public MirrorService(ILogger<MirrorService> logger, IConfiguration configuration)
+        public MirrorJob(ILogger<MirrorJob> logger, IConfiguration configuration)
         {
             _logger = logger;
 
@@ -21,33 +25,9 @@
             var seconds = Convert.ToInt32(configuration.GetSection("PeriodTime")["Seconds"]);
             timeout = new TimeSpan(hours, minutes, seconds);
         }
-
-        public Task StartAsync(CancellationToken stoppingToken)
+        public async Task Execute(IJobExecutionContext context)
         {
-            _logger.LogInformation("Hosted Service Started To Mirroring.");
-
-            _timer = new Timer(DoWork, null, TimeSpan.Zero, timeout);
-
-            return Task.CompletedTask;
-        }
-
-        public Task StopAsync(CancellationToken stoppingToken)
-        {
-            _logger.LogInformation("Hosted Service is stopping.");
-
-            _timer?.Change(Timeout.Infinite, 0);
-
-            return Task.CompletedTask;
-        }
-
-        public void Dispose()
-        {
-            _timer?.Dispose();
-        }
-
-        private void DoWork(object state)
-        {
-            Mirror.StarToMirror(SourceUrl, DestinationUrl);
+            await Task.Run(() => Mirror.StarToMirror(SourceUrl, DestinationUrl));
             _logger.LogInformation("Mirror Done.");
 
             var count = Interlocked.Increment(ref executionCount);
