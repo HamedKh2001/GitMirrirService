@@ -10,24 +10,19 @@ namespace BRTechGroup.JMS.HostedService.Jobs
         private string SourceUrl = string.Empty;
         private string DestinationUrl = string.Empty;
         private readonly ILogger<MirrorJob> _logger;
-        private Timer _timer = null;
-        private TimeSpan timeout;
+        private readonly IConfiguration _configuration;
 
         public MirrorJob(ILogger<MirrorJob> logger, IConfiguration configuration)
         {
             _logger = logger;
+            _configuration = configuration;
 
             SourceUrl = configuration.GetSection("SourceUrl").Value;
             DestinationUrl = configuration.GetSection("DestinationUrl").Value;
-
-            var hours = Convert.ToInt32(configuration.GetSection("PeriodTime")["Hour"]);
-            var minutes = Convert.ToInt32(configuration.GetSection("PeriodTime")["Minutes"]);
-            var seconds = Convert.ToInt32(configuration.GetSection("PeriodTime")["Seconds"]);
-            timeout = new TimeSpan(hours, minutes, seconds);
         }
         public async Task Execute(IJobExecutionContext context)
         {
-            await Task.Run(() => Mirror.StarToMirror(SourceUrl, DestinationUrl));
+            await Task.Run(() => Mirror.StarToMirror(SourceUrl, DestinationUrl, _configuration["SaveDirectory"]));
             _logger.LogInformation("Mirror Done.");
 
             var count = Interlocked.Increment(ref executionCount);

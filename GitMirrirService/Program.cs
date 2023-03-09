@@ -1,47 +1,47 @@
 using BRTechGroup.JMS.HostedService.HostedServices;
 using BRTechGroup.JMS.HostedService.JobFactories;
 using BRTechGroup.JMS.HostedService.Jobs;
+using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
-using Quartz;
+using SharedKernel.Extensions;
+using System.Diagnostics;
 
-namespace GitMirrorService
+
+var webApplicationOptions = new WebApplicationOptions()
 {
-    public class Program
-    {
-        public static void Main(string[] args)
-        {
-            var builder = WebApplication.CreateBuilder(args);
+    ContentRootPath = AppContext.BaseDirectory,
+    Args = args,
+    ApplicationName = Process.GetCurrentProcess().ProcessName
+};
 
-            builder.Services.AddSingleton<IJobFactory, SingletonJobFactory>();
-            builder.Services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
-            builder.Services.AddSingleton<MirrorJob>();
-            builder.Services.AddSingleton(new JobSchedule(jobType: typeof(MirrorJob), cronExpression:
-                builder.Configuration["Quartz:MirrorCronExpression"]
-            ));
-            builder.Services.AddHostedService<QuartzHostedService>();
+var builder = WebApplication.CreateBuilder(webApplicationOptions);
+
+builder.Host.AddMySerilogWithELK("GMS");
+
+builder.Services.AddSingleton<IJobFactory, SingletonJobFactory>();
+builder.Services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
+builder.Services.AddSingleton<MirrorJob>();
+builder.Services.AddSingleton(new JobSchedule(jobType: typeof(MirrorJob), cronExpression:
+    builder.Configuration["Quartz:MirrorCronExpression"]
+));
+builder.Services.AddHostedService<QuartzHostedService>();
+
+builder.Host.UseWindowsService();
+
+builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
+
+var app = builder.Build();
+
+app.UseSwagger();
+app.UseSwaggerUI();
+
+app.UseHttpsRedirection();
+
+app.UseAuthorization();
 
 
-            builder.Services.AddControllers();
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
-            builder.Services.AddScoped(serviceType: typeof(Nlogger.ILogger<>), implementationType: typeof(Nlogger.NLogAdapter<>));
-            var app = builder.Build();
-
-            if (app.Environment.IsDevelopment())
-            {
-                app.UseSwagger();
-                app.UseSwaggerUI();
-            }
-
-            app.UseHttpsRedirection();
-
-            app.UseAuthorization();
-
-
-            app.MapControllers();
-
-            app.Run();
-        }
-    }
-}
+app.MapControllers();
+app.Run();
