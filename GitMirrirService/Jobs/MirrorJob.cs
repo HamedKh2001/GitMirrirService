@@ -7,22 +7,21 @@ namespace BRTechGroup.JMS.HostedService.Jobs
     public class MirrorJob : IJob
     {
         private int executionCount = 0;
-        private string SourceUrl = string.Empty;
-        private string DestinationUrl = string.Empty;
+        private Info FrontEndInfo = new();
+        private Info BackEndInfo = new();
         private readonly ILogger<MirrorJob> _logger;
-        private readonly IConfiguration _configuration;
 
         public MirrorJob(ILogger<MirrorJob> logger, IConfiguration configuration)
         {
             _logger = logger;
-            _configuration = configuration;
 
-            SourceUrl = configuration.GetSection("SourceUrl").Value;
-            DestinationUrl = configuration.GetSection("DestinationUrl").Value;
+            FrontEndInfo = configuration.GetSection("FrontEndInfo").Get<Info>();
+            BackEndInfo = configuration.GetSection("BackEndInfo").Get<Info>();
         }
         public async Task Execute(IJobExecutionContext context)
         {
-            await Task.Run(() => Mirror.StarToMirror(SourceUrl, DestinationUrl, _configuration["SaveDirectory"]));
+            await Task.Run(() => Mirror.StarToMirror(BackEndInfo.SourceUrl, BackEndInfo.DestinationUrl, BackEndInfo.SaveDirectory, BackEndInfo.WaitForDownload));
+            await Task.Run(() => Mirror.StarToMirror(FrontEndInfo.SourceUrl, FrontEndInfo.DestinationUrl, FrontEndInfo.SaveDirectory, FrontEndInfo.WaitForDownload));
             _logger.LogInformation("Mirror Done.");
 
             var count = Interlocked.Increment(ref executionCount);

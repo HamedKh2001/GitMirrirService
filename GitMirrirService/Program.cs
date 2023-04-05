@@ -1,10 +1,13 @@
 using BRTechGroup.JMS.HostedService.HostedServices;
 using BRTechGroup.JMS.HostedService.JobFactories;
 using BRTechGroup.JMS.HostedService.Jobs;
+using GitMirrorService;
+using Microsoft.Extensions.DependencyInjection;
 using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
 using SharedKernel.Extensions;
+using System.Configuration;
 using System.Diagnostics;
 
 
@@ -18,7 +21,6 @@ var webApplicationOptions = new WebApplicationOptions()
 var builder = WebApplication.CreateBuilder(webApplicationOptions);
 
 builder.Host.AddMySerilogWithELK("GMS");
-
 builder.Services.AddSingleton<IJobFactory, SingletonJobFactory>();
 builder.Services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
 builder.Services.AddSingleton<MirrorJob>();
