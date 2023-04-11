@@ -14,11 +14,11 @@ namespace GitMirrorService
                 Directory.CreateDirectory(WorkingDirectory);
 
             CommandExecutor($"git clone --mirror {sourceUrl}", WorkingDirectory);
-            Task.Delay(waitForDownload).Wait();
+            //Task.Delay(waitForDownload).Wait();
 
             WorkingDirectory = Path.Combine(WorkingDirectory, sourceUrl.Split('/').ToList().Last());
             CommandExecutor($"git remote set-url --push origin {destinationUrl}", WorkingDirectory);
-            Task.Delay(1000).Wait();
+            //Task.Delay(1000).Wait();
 
             CommandExecutor($"git push --mirror", WorkingDirectory);
         }
@@ -37,6 +37,7 @@ namespace GitMirrorService
                     }
             };
             p.Start();
+            p.WaitForExit();
         }
 
         static string GetMyDateTime()
