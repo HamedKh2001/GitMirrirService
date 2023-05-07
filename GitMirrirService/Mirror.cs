@@ -4,7 +4,7 @@ namespace GitMirrorService
 {
     public class Mirror
     {
-        public static void StarToMirror(string sourceUrl, string destinationUrl, string WorkingDirectory, ILogger _logger)
+        public static void StarToMirror(string sourceUrl, string destinationUrl, string WorkingDirectory, ILogger logger)
         {
             try
             {
@@ -21,7 +21,7 @@ namespace GitMirrorService
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, ex.Message);
+                logger.LogError(ex, ex.Message);
             }
         }
 

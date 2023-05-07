@@ -1,8 +1,6 @@
 using BRTechGroup.JMS.HostedService.HostedServices;
 using BRTechGroup.JMS.HostedService.JobFactories;
 using BRTechGroup.JMS.HostedService.Jobs;
-using GitMirrorService;
-using Microsoft.Extensions.DependencyInjection;
 using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;

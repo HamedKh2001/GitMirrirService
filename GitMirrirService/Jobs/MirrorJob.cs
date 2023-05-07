@@ -11,12 +11,12 @@ namespace BRTechGroup.JMS.HostedService.Jobs
         private Info BackEndInfo = new();
         private readonly ILogger<MirrorJob> _logger;
 
-        public MirrorJob(ILogger<MirrorJob> logger, IConfiguration configuration)
+        public MirrorJob(IConfiguration configuration, ILogger<MirrorJob> logger)
         {
-            _logger = logger;
 
             FrontEndInfo = configuration.GetSection("FrontEndInfo").Get<Info>();
             BackEndInfo = configuration.GetSection("BackEndInfo").Get<Info>();
+            _logger=logger;
         }
         public async Task Execute(IJobExecutionContext context)
         {
