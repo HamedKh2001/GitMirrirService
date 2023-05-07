@@ -7,7 +7,6 @@ using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
 using SharedKernel.Extensions;
-using System.Configuration;
 using System.Diagnostics;
 
 
@@ -43,7 +42,6 @@ app.UseSwaggerUI();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
-
 
 app.MapControllers();
 app.Run();

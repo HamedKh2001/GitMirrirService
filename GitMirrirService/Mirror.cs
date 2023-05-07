@@ -4,23 +4,25 @@ namespace GitMirrorService
 {
     public class Mirror
     {
-        //private static string WorkingDirectory;
-
-        public static void StarToMirror(string sourceUrl, string destinationUrl, string WorkingDirectory,int waitForDownload)
+        public static void StarToMirror(string sourceUrl, string destinationUrl, string WorkingDirectory, ILogger _logger)
         {
-           //var WorkingDirectory = Directory.GetCurrentDirectory();
-            WorkingDirectory = Path.Combine(WorkingDirectory, GetMyDateTime());
-            if (!Directory.Exists(WorkingDirectory))
-                Directory.CreateDirectory(WorkingDirectory);
+            try
+            {
+                WorkingDirectory = Path.Combine(WorkingDirectory, GetMyDateTime());
+                if (!Directory.Exists(WorkingDirectory))
+                    Directory.CreateDirectory(WorkingDirectory);
 
-            CommandExecutor($"git clone --mirror {sourceUrl}", WorkingDirectory);
-            //Task.Delay(waitForDownload).Wait();
+                CommandExecutor($"git clone --mirror {sourceUrl}", WorkingDirectory);
 
-            WorkingDirectory = Path.Combine(WorkingDirectory, sourceUrl.Split('/').ToList().Last());
-            CommandExecutor($"git remote set-url --push origin {destinationUrl}", WorkingDirectory);
-            //Task.Delay(1000).Wait();
+                WorkingDirectory = Path.Combine(WorkingDirectory, sourceUrl.Split('/').ToList().Last());
+                CommandExecutor($"git remote set-url --push origin {destinationUrl}", WorkingDirectory);
 
-            CommandExecutor($"git push --mirror", WorkingDirectory);
+                CommandExecutor($"git push --mirror", WorkingDirectory);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+            }
         }
 
 
