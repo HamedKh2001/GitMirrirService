@@ -13,11 +13,13 @@ namespace GitMirrorService
                     Directory.CreateDirectory(WorkingDirectory);
 
                 CommandExecutor($"git clone --mirror {sourceUrl}", WorkingDirectory);
+                logger.LogInformation("git clone done.");
 
                 WorkingDirectory = Path.Combine(WorkingDirectory, sourceUrl.Split('/').ToList().Last());
                 CommandExecutor($"git remote set-url --push origin {destinationUrl}", WorkingDirectory);
 
                 CommandExecutor($"git push --mirror", WorkingDirectory);
+                logger.LogInformation("pushed successfully");
             }
             catch (Exception ex)
             {
